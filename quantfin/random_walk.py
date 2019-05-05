@@ -14,3 +14,11 @@ def geometric_brownian(N, S0, mu, sigma):
         S[n] = S[n-1]*np.exp(np.random.normal(mu, sigma))
 
     return S
+
+def mean_reversion(N, x0, X, alpha, mu=0.0, sigma=1.0):
+    x = np.zeros((N,))
+    x[0] = x0
+    for n in range(1, N):
+        x[n] = x[n-1] + alpha * (X - x[n-1]) + np.random.normal(mu, sigma)
+
+    return x
