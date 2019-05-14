@@ -12,6 +12,7 @@ def yield_to_maturity(M, P, C, T, t, m):
     :param t: Current time
     :param m: Fraction of the year coupon payments are made
               (e.g. 0.5 for bi-annually)
+    :raises RuntimeError: If the root finding fails
     """
     ti = np.arange(t, T, m)
 
@@ -21,7 +22,8 @@ def yield_to_maturity(M, P, C, T, t, m):
 
     y0 = 3*C / P # Initial guess - midpoint of 2C/P and 4C/P
     res = root(f, y0)
-    if res.success:
-        return res.x[0]
-
-    return None
+    
+    if not res.success:
+        raise RuntimeError("Failed to find root: " + res.message)
+    
+    return res.x[0]
