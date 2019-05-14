@@ -94,5 +94,12 @@ def garch(R, verbose=False):
     volatility = np.array([sigma_sq(n, params[0], params[1], params[2]) for n in range(N)])
     
     return (volatility, params)
-    
+
+def annualise(sigma_sq, N=250):
+    """
+    Converts volatility into annualised volatility
+    :param sigma_sq: Volatilities calculated at daily (or other regular) intervals
+    :param N: Number of trading days (or weeks, etc) in a year
+    """
+    return np.sqrt(sigma_sq * N)
     
