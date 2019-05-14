@@ -13,13 +13,14 @@ def swap_rate(T, rs, x=0.5):
     taus = np.arange(x, T + x, x) # Payment dates
 
     if len(taus) != len(rs):
-        raise ValueError("Not enough interest rates provided")
+        raise ValueError(
+            "Not enough interest rates provided. Expected {} but got {}."
+            .format(len(taus), len(rs))
+        )
 
-    F = 1 - np.exp(-taus[-1] * rs[-1])
-    denom = 0
-    for i in range(len(taus)):
-        denom += np.exp(-taus[i] * rs[i])
-    denom *= x
+    # F = (1 - exp(-tau_N * r_N)) / (x * sum_{i=1}^{N} exp(-tau_i * r_i))
+    F = 1 - np.exp(-taus[-1] * rs[-1]) # Numerator
+    denom = x * np.exp(-taus * rs).sum() # Denominator
     F /= denom
 
     return F
