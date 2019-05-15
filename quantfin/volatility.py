@@ -19,7 +19,7 @@ def moving_average(R, M):
     for i in range(M, N):
         sigma_sq[i - M] = R[i-M:i].std() ** 2
 
-    return sigma_sq
+    return np.sqrt(sigma_sq)
 
 
 def ewma(R, smoothing=0.98):
@@ -39,7 +39,7 @@ def ewma(R, smoothing=0.98):
         vol *= (1 - smoothing)
         sigma_sq[n] = vol
 
-    return sigma_sq
+    return np.sqrt(sigma_sq)
 
 
 def garch(R, verbose=False):
@@ -112,6 +112,7 @@ def garch(R, verbose=False):
     # Calculate the volatility using the parameters found by minimize
     params = res.x
     volatility = np.array([sigma_sq(n, params[0], params[1], params[2]) for n in range(N)])
+    volatility = np.sqrt(volatilty)
 
     return (volatility, params)
 
@@ -189,15 +190,16 @@ def garch_asym(R, verbose=False):
     # Calculate the volatility using the parameters found by minimize
     params = res.x
     volatility = np.array([sigma_sq(n, params[0], params[1], params[2], params[3]) for n in range(N)])
+    volatility = np.sqrt(volatility)
 
     return (volatility, params)
 
-def annualise(sigma_sq, N=250):
+def annualise(sigma, N=250):
     """Converts volatility into annualised volatility.
 
     Args:
-        sigma_sq (numpy.array): Volatilities calculated at daily (or other
-            regular) intervals.
+        sigma (numpy.array): Volatilities calculated at daily (or other regular)
+            intervals.
         N (int, optional): Number of trading days (or weeks, etc) in a year.
     """
-    return np.sqrt(sigma_sq * N)
+    return sigma * np.sqrt(N)

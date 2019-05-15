@@ -43,7 +43,7 @@ def moving_average(R, M):
     for i in range(M, N):
         sigma_sq[i - M] = R[i-M:i].std() ** 2
 
-    return sigma_sq
+    return np.sqrt(sigma_sq)
 
 
 def ewma(R, smoothing=0.98):
@@ -63,7 +63,7 @@ def ewma(R, smoothing=0.98):
         vol *= (1 - smoothing)
         sigma_sq[n] = vol
 
-    return sigma_sq
+    return np.sqrt(sigma_sq)
 
 
 def garch(R, verbose=False):
@@ -136,6 +136,7 @@ def garch(R, verbose=False):
     # Calculate the volatility using the parameters found by minimize
     params = res.x
     volatility = np.array([sigma_sq(n, params[0], params[1], params[2]) for n in range(N)])
+    volatility = np.sqrt(volatilty)
 
     return (volatility, params)
 
@@ -213,18 +214,19 @@ def garch_asym(R, verbose=False):
     # Calculate the volatility using the parameters found by minimize
     params = res.x
     volatility = np.array([sigma_sq(n, params[0], params[1], params[2], params[3]) for n in range(N)])
+    volatility = np.sqrt(volatility)
 
     return (volatility, params)
 
-def annualise(sigma_sq, N=250):
+def annualise(sigma, N=250):
     &#34;&#34;&#34;Converts volatility into annualised volatility.
 
     Args:
-        sigma_sq (numpy.array): Volatilities calculated at daily (or other
-            regular) intervals.
+        sigma (numpy.array): Volatilities calculated at daily (or other regular)
+            intervals.
         N (int, optional): Number of trading days (or weeks, etc) in a year.
     &#34;&#34;&#34;
-    return np.sqrt(sigma_sq * N)</code></pre>
+    return sigma * np.sqrt(N)</code></pre>
 </details>
 </section>
 <section>
@@ -235,29 +237,29 @@ def annualise(sigma_sq, N=250):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="quantfin.volatility.annualise"><code class="name flex">
-<span>def <span class="ident">annualise</span></span>(<span>sigma_sq, N=250)</span>
+<span>def <span class="ident">annualise</span></span>(<span>sigma, N=250)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Converts volatility into annualised volatility.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>sigma_sq</code></strong> :&ensp;<code>numpy.array</code></dt>
-<dd>Volatilities calculated at daily (or other
-regular) intervals.</dd>
+<dt><strong><code>sigma</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Volatilities calculated at daily (or other regular)
+intervals.</dd>
 <dt><strong><code>N</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Number of trading days (or weeks, etc) in a year.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">def annualise(sigma_sq, N=250):
+<pre><code class="python">def annualise(sigma, N=250):
     &#34;&#34;&#34;Converts volatility into annualised volatility.
 
     Args:
-        sigma_sq (numpy.array): Volatilities calculated at daily (or other
-            regular) intervals.
+        sigma (numpy.array): Volatilities calculated at daily (or other regular)
+            intervals.
         N (int, optional): Number of trading days (or weeks, etc) in a year.
     &#34;&#34;&#34;
-    return np.sqrt(sigma_sq * N)</code></pre>
+    return sigma * np.sqrt(N)</code></pre>
 </details>
 </dd>
 <dt id="quantfin.volatility.ewma"><code class="name flex">
@@ -293,7 +295,7 @@ regular) intervals.</dd>
         vol *= (1 - smoothing)
         sigma_sq[n] = vol
 
-    return sigma_sq</code></pre>
+    return np.sqrt(sigma_sq)</code></pre>
 </details>
 </dd>
 <dt id="quantfin.volatility.garch"><code class="name flex">
@@ -396,6 +398,7 @@ parameters.</p>
     # Calculate the volatility using the parameters found by minimize
     params = res.x
     volatility = np.array([sigma_sq(n, params[0], params[1], params[2]) for n in range(N)])
+    volatility = np.sqrt(volatilty)
 
     return (volatility, params)</code></pre>
 </details>
@@ -504,6 +507,7 @@ model parameters.</p>
     # Calculate the volatility using the parameters found by minimize
     params = res.x
     volatility = np.array([sigma_sq(n, params[0], params[1], params[2], params[3]) for n in range(N)])
+    volatility = np.sqrt(volatility)
 
     return (volatility, params)</code></pre>
 </details>
@@ -541,7 +545,7 @@ volatilities.</p></section>
     for i in range(M, N):
         sigma_sq[i - M] = R[i-M:i].std() ** 2
 
-    return sigma_sq</code></pre>
+    return np.sqrt(sigma_sq)</code></pre>
 </details>
 </dd>
 </dl>
