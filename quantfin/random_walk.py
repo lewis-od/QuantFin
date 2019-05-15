@@ -1,13 +1,16 @@
 import numpy as np
 
 def geometric_brownian(N, S0, mu, sigma):
-    """
-    Generates a geometric Brownian random walk
+    """Generates a geometric Brownian random walk.
 
-    :param N: How many steps to take
-    :param S0: Starting value of the walk
-    :param mu: Drift parameter
-    :param sigma: Volatility parameter
+    Args:
+        N (int): How many steps to generate.
+        S0 (float): Starting value of the walk.
+        mu (float): Drift parameter.
+        sigma (float): Volatility parameter.
+
+    Returns:
+        A numpy array containing the value of the walk at each step.
     """
     S = np.zeros((N,))
     S[0] = S0
@@ -17,14 +20,18 @@ def geometric_brownian(N, S0, mu, sigma):
     return S
 
 def mean_reversion(N, x0, X, alpha, sigma=1.0):
-    """
-    Generates a mean reverting random walk
+    """Generates a mean reverting random walk.
 
-    :param N: How many steps to take
-    :param x0: Starting value
-    :param X: Mean value to revert to
-    :param alpha: Strength of mean reversion
-    :param sigma: Standard deviation of noise
+    Args:
+        N (int): How many steps to generate.
+        x0 (float): Starting value of the walk.
+        X (float): Mean value to revert to.
+        alpha (float): Strength of mean reversion.
+        sigma (float, optional): Standard deviation of the distribution the noise is
+            sampled from.
+
+    Returns:
+        A numpy array containing the value of the walk at each step.
     """
     x = np.zeros((N,))
     x[0] = x0

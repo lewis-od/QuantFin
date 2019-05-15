@@ -1,14 +1,18 @@
 import numpy as np
 
 def swap_rate(T, rs, x=0.5):
-    """
-    Calculates the fixed rate for an interest-rate swap
+    """Calculates the fixed rate for an interest-rate swap.
 
-    :param T: Maturity
-    :param rs: Current rates for relevant maturities. I.e. for a maturity
-        of 2 years with payments twice a year, the 6 month, 12 month, 18 month,
-        and 24 months rates must be provided.
-    :param x: Fraction of the year payments are made. Defualts to semi-annually.
+    Args:
+        T (float): Time to maturity of the swap.
+        rs (numpy.array): Current rates for relevant maturities. I.e. for a
+            time to maturity of 2 years with payments twice a year, the 6 month,
+            12 month, 18 month, and 24 months rates must be provided.
+        x (float, optional): Fraction of the year payments are made. Defualts to
+            semi-annually.
+
+    Returns:
+        The calculated swap rate as a float.
     """
     taus = np.arange(x, T + x, x) # Payment dates
 
