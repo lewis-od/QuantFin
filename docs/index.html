@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
 <title>quantfin API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="A python module for performing various quantitative finance calculations. Very
+much work in progress …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,9 +21,33 @@
 <h1 class="title">Module <code>quantfin</code></h1>
 </header>
 <section id="section-intro">
+<p>A python module for performing various quantitative finance calculations. Very
+much work in progress.</p>
+<ul>
+<li><a title="quantfin.bonds" href="bonds.html"><code>quantfin.bonds</code></a> has a function to calculate the yield to maturity of a bond</li>
+<li><a title="quantfin.random_walk" href="random_walk.html"><code>quantfin.random_walk</code></a> generates geometric Brownian or mean reverting random
+walks (for use in Monte Carlo simulations)</li>
+<li><a title="quantfin.swaps" href="swaps.html"><code>quantfin.swaps</code></a> contains a function to calculate the fixed rate to use in a
+interest-rate swap</li>
+<li><a title="quantfin.volatility" href="volatility.html"><code>quantfin.volatility</code></a> contains functions to calculate volatility from returns
+data using various models</li>
+</ul>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">from . import bonds
+<pre><code class="python">&#34;&#34;&#34;
+A python module for performing various quantitative finance calculations. Very
+much work in progress.
+
+- `quantfin.bonds` has a function to calculate the yield to maturity of a bond
+- `quantfin.random_walk` generates geometric Brownian or mean reverting random
+walks (for use in Monte Carlo simulations)
+- `quantfin.swaps` contains a function to calculate the fixed rate to use in a
+interest-rate swap
+- `quantfin.volatility` contains functions to calculate volatility from returns
+data using various models
+&#34;&#34;&#34;
+
+from . import bonds
 from . import swaps
 from . import random_walk
 from . import volatility</code></pre>
