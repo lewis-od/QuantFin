@@ -131,6 +131,6 @@ def expected(params):
         raise ValueError("Expected volatility not defined for omega < 0")
 
     if alpha + beta > 1:
-        raise ValueError("Expected volatility not defined for alpha + beta < 1")
+        raise ValueError("Expected volatility not defined for alpha + beta > 1")
 
     return np.sqrt(omega / (1 - alpha - beta))
