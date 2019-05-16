@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin API documentation</title>
-<meta name="description" content="A python module for performing various quantitative finance calculations. Very
-much work in progress …" />
+<title>quantfin.volatility.average API documentation</title>
+<meta name="description" content="Average
+Functions for calulating volatility using averaging techniques." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -18,65 +18,137 @@ much work in progress …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin</code></h1>
+<h1 class="title">Module <code>quantfin.volatility.average</code></h1>
 </header>
 <section id="section-intro">
-<p>A python module for performing various quantitative finance calculations. Very
-much work in progress.</p>
-<ul>
-<li><a title="quantfin.bonds" href="bonds.html"><code>quantfin.bonds</code></a> has a function to calculate the yield to maturity of a bond</li>
-<li><a title="quantfin.random_walk" href="random_walk.html"><code>quantfin.random_walk</code></a> generates geometric Brownian or mean reverting random
-walks (for use in Monte Carlo simulations)</li>
-<li><a title="quantfin.swaps" href="swaps.html"><code>quantfin.swaps</code></a> contains a function to calculate the fixed rate to use in a
-interest-rate swap</li>
-<li><a title="quantfin.volatility" href="volatility/index.html"><code>quantfin.volatility</code></a> contains functions to calculate volatility from returns
-data using various models</li>
-</ul>
+<h1 id="average">Average</h1>
+<p>Functions for calulating volatility using averaging techniques.</p>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">&#34;&#34;&#34;
-A python module for performing various quantitative finance calculations. Very
-much work in progress.
-
-- `quantfin.bonds` has a function to calculate the yield to maturity of a bond
-- `quantfin.random_walk` generates geometric Brownian or mean reverting random
-walks (for use in Monte Carlo simulations)
-- `quantfin.swaps` contains a function to calculate the fixed rate to use in a
-interest-rate swap
-- `quantfin.volatility` contains functions to calculate volatility from returns
-data using various models
+# Average
+Functions for calulating volatility using averaging techniques.
 &#34;&#34;&#34;
+import numpy as np
 
-from . import bonds
-from . import swaps
-from . import random_walk
-from . import volatility</code></pre>
+def moving(R, M):
+    &#34;&#34;&#34;Calculates volatility using an M-day moving average.
+
+    Args:
+        R (numpy.array): Financial returns data from which to calculate volatility.
+        M (int): Number of days to use for the moving average.
+
+    Returns:
+        An numpy array of size `(len(R) - M)` containing the calculated
+        volatilities.
+    &#34;&#34;&#34;
+    N = len(R)
+    sigma = np.zeros(N - M)
+    for i in range(M, N):
+        sigma[i - M] = R[i-M:i].std()
+
+    return sigma
+
+def weighted(R, smoothing=0.98):
+    &#34;&#34;&#34;Calculates volatility using an exponentially weighted moving average.
+
+    Args:
+        R (numpy.array): Financial returns data from which to calculate volatility.
+        smoothing (float): Smoothing parameter (lambda).
+
+    Returns:
+        A numpy array of size `len(R)` containing the calculated volatilities.
+    &#34;&#34;&#34;
+    N = len(R)
+    sigma_sq = np.zeros(N)
+    for n in range(N):
+        vol = np.array([(smoothing ** i) * (R[n-i] ** 2) for i in range(n)]).sum()
+        vol *= (1 - smoothing)
+        sigma_sq[n] = vol
+
+    return np.sqrt(sigma_sq)</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></dt>
+<dt id="quantfin.volatility.average.moving"><code class="name flex">
+<span>def <span class="ident">moving</span></span>(<span>R, M)</span>
+</code></dt>
 <dd>
-<section class="desc"></section>
+<section class="desc"><p>Calculates volatility using an M-day moving average.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>R</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Financial returns data from which to calculate volatility.</dd>
+<dt><strong><code>M</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of days to use for the moving average.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>An numpy array of size <code>(len(R) - M)</code> containing the calculated
+volatilities.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def moving(R, M):
+    &#34;&#34;&#34;Calculates volatility using an M-day moving average.
+
+    Args:
+        R (numpy.array): Financial returns data from which to calculate volatility.
+        M (int): Number of days to use for the moving average.
+
+    Returns:
+        An numpy array of size `(len(R) - M)` containing the calculated
+        volatilities.
+    &#34;&#34;&#34;
+    N = len(R)
+    sigma = np.zeros(N - M)
+    for i in range(M, N):
+        sigma[i - M] = R[i-M:i].std()
+
+    return sigma</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="quantfin.random_walk" href="random_walk.html">quantfin.random_walk</a></code></dt>
+<dt id="quantfin.volatility.average.weighted"><code class="name flex">
+<span>def <span class="ident">weighted</span></span>(<span>R, smoothing=0.98)</span>
+</code></dt>
 <dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></dt>
-<dd>
-<section class="desc"><p>Tools for calculating volatilty using various different models.</p></section>
+<section class="desc"><p>Calculates volatility using an exponentially weighted moving average.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>R</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Financial returns data from which to calculate volatility.</dd>
+<dt><strong><code>smoothing</code></strong> :&ensp;<code>float</code></dt>
+<dd>Smoothing parameter (lambda).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A numpy array of size <code>len(R)</code> containing the calculated volatilities.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def weighted(R, smoothing=0.98):
+    &#34;&#34;&#34;Calculates volatility using an exponentially weighted moving average.
+
+    Args:
+        R (numpy.array): Financial returns data from which to calculate volatility.
+        smoothing (float): Smoothing parameter (lambda).
+
+    Returns:
+        A numpy array of size `len(R)` containing the calculated volatilities.
+    &#34;&#34;&#34;
+    N = len(R)
+    sigma_sq = np.zeros(N)
+    for n in range(N):
+        vol = np.array([(smoothing ** i) * (R[n-i] ** 2) for i in range(n)]).sum()
+        vol *= (1 - smoothing)
+        sigma_sq[n] = vol
+
+    return np.sqrt(sigma_sq)</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -84,15 +156,20 @@ from . import volatility</code></pre>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#average">Average</a></li>
+</ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></li>
-<li><code><a title="quantfin.random_walk" href="random_walk.html">quantfin.random_walk</a></code></li>
-<li><code><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></li>
-<li><code><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></li>
+<li><code><a title="quantfin.volatility" href="index.html">quantfin.volatility</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="quantfin.volatility.average.moving" href="#quantfin.volatility.average.moving">moving</a></code></li>
+<li><code><a title="quantfin.volatility.average.weighted" href="#quantfin.volatility.average.weighted">weighted</a></code></li>
 </ul>
 </li>
 </ul>
