@@ -121,3 +121,30 @@ def fit_model(R, init=[5, 5, 5], verbose=False):
     params = res.x
 
     return params
+
+def expected(params):
+    """Calculate the expected volatility predicted by the model.
+
+    Args:
+        params (numpy.array): The parameters from the fitted model of the form
+            `[alpha, beta, omega, delta]`.
+
+    Raises:
+        ValueError: If the expected volatility is not well defined.
+    """
+    a, b, o, d = params
+    # Expected volatility is the solution to the quadratic equation
+    #   (a+b-1)sigma^2 - 2*a*d*sigma + o + a*d^2 = 0
+
+    if a + b > 1:
+        raise ValueError("Expected volatilty not defined for alpha + beta > 1")
+
+    disc = o*(1 - a - b) + a * d**2 * (1 - b) # Discriminant
+    # No real solutions if discriminant is negative
+    if disc < 0:
+        raise ValueError("Expected volatility not well defined.")
+
+    sigma1 = (a * d + np.sqrt(disc)) / (a + b - 1)
+    sigma2 = (a * d - np.sqrt(disc)) / (a + b - 1)
+
+    return max(sigma1, sigma2)
