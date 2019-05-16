@@ -1,12 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin API documentation</title>
-<meta name="description" content="A python module for performing various quantitative finance calculations. Very
-much work in progress …" />
+<title>quantfin.data API documentation</title>
+<meta name="description" content="Algorithms for data analysis" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -18,69 +17,28 @@ much work in progress …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin</code></h1>
+<h1 class="title">Module <code>quantfin.data</code></h1>
 </header>
 <section id="section-intro">
-<p>A python module for performing various quantitative finance calculations. Very
-much work in progress.</p>
-<ul>
-<li><a title="quantfin.bonds" href="bonds.html"><code>quantfin.bonds</code></a> has a function to calculate the yield to maturity of a bond</li>
-<li><a title="quantfin.random_walk" href="random_walk.html"><code>quantfin.random_walk</code></a> generates geometric Brownian or mean reverting random
-walks (for use in Monte Carlo simulations)</li>
-<li><a title="quantfin.swaps" href="swaps.html"><code>quantfin.swaps</code></a> contains a function to calculate the fixed rate to use in a
-interest-rate swap</li>
-<li><a title="quantfin.volatility" href="volatility/index.html"><code>quantfin.volatility</code></a> contains functions to calculate volatility from returns
-data using various models</li>
-</ul>
+<p>Algorithms for data analysis</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;
-A python module for performing various quantitative finance calculations. Very
-much work in progress.
+<pre><code class="python">&#34;&#34;&#34;Algorithms for data analysis&#34;&#34;&#34;
 
-- `quantfin.bonds` has a function to calculate the yield to maturity of a bond
-- `quantfin.random_walk` generates geometric Brownian or mean reverting random
-walks (for use in Monte Carlo simulations)
-- `quantfin.swaps` contains a function to calculate the fixed rate to use in a
-interest-rate swap
-- `quantfin.volatility` contains functions to calculate volatility from returns
-data using various models
-&#34;&#34;&#34;
-
-from . import bonds
-from . import swaps
-from . import random_walk
-from . import volatility
-from . import data
-from . import utils</code></pre>
+from . import dist
+from . import smoothing</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></dt>
+<dt><code class="name"><a title="quantfin.data.dist" href="dist.html">quantfin.data.dist</a></code></dt>
 <dd>
-<section class="desc"></section>
+<section class="desc"><p>Statistical Distributions</p></section>
 </dd>
-<dt><code class="name"><a title="quantfin.data" href="data/index.html">quantfin.data</a></code></dt>
+<dt><code class="name"><a title="quantfin.data.smoothing" href="smoothing.html">quantfin.data.smoothing</a></code></dt>
 <dd>
-<section class="desc"><p>Algorithms for data analysis</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.random_walk" href="random_walk.html">quantfin.random_walk</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.utils" href="utils.html">quantfin.utils</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></dt>
-<dd>
-<section class="desc"><p>Tools for calculating volatilty using various different models.</p></section>
+<section class="desc"><p>Various data smoothing methods</p></section>
 </dd>
 </dl>
 </section>
@@ -97,14 +55,15 @@ from . import utils</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="quantfin" href="../index.html">quantfin</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></li>
-<li><code><a title="quantfin.data" href="data/index.html">quantfin.data</a></code></li>
-<li><code><a title="quantfin.random_walk" href="random_walk.html">quantfin.random_walk</a></code></li>
-<li><code><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></li>
-<li><code><a title="quantfin.utils" href="utils.html">quantfin.utils</a></code></li>
-<li><code><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></li>
+<li><code><a title="quantfin.data.dist" href="dist.html">quantfin.data.dist</a></code></li>
+<li><code><a title="quantfin.data.smoothing" href="smoothing.html">quantfin.data.smoothing</a></code></li>
 </ul>
 </li>
 </ul>

@@ -1,12 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin API documentation</title>
-<meta name="description" content="A python module for performing various quantitative finance calculations. Very
-much work in progress …" />
+<title>quantfin.data.smoothing API documentation</title>
+<meta name="description" content="Various data smoothing methods" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -18,75 +17,95 @@ much work in progress …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin</code></h1>
+<h1 class="title">Module <code>quantfin.data.smoothing</code></h1>
 </header>
 <section id="section-intro">
-<p>A python module for performing various quantitative finance calculations. Very
-much work in progress.</p>
-<ul>
-<li><a title="quantfin.bonds" href="bonds.html"><code>quantfin.bonds</code></a> has a function to calculate the yield to maturity of a bond</li>
-<li><a title="quantfin.random_walk" href="random_walk.html"><code>quantfin.random_walk</code></a> generates geometric Brownian or mean reverting random
-walks (for use in Monte Carlo simulations)</li>
-<li><a title="quantfin.swaps" href="swaps.html"><code>quantfin.swaps</code></a> contains a function to calculate the fixed rate to use in a
-interest-rate swap</li>
-<li><a title="quantfin.volatility" href="volatility/index.html"><code>quantfin.volatility</code></a> contains functions to calculate volatility from returns
-data using various models</li>
-</ul>
+<p>Various data smoothing methods</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;
-A python module for performing various quantitative finance calculations. Very
-much work in progress.
+<pre><code class="python">&#34;&#34;&#34;Various data smoothing methods&#34;&#34;&#34;
+import numpy as np
+from .dist import gaussian
 
-- `quantfin.bonds` has a function to calculate the yield to maturity of a bond
-- `quantfin.random_walk` generates geometric Brownian or mean reverting random
-walks (for use in Monte Carlo simulations)
-- `quantfin.swaps` contains a function to calculate the fixed rate to use in a
-interest-rate swap
-- `quantfin.volatility` contains functions to calculate volatility from returns
-data using various models
-&#34;&#34;&#34;
+def kde(x, y, delta, k=gaussian):
+    &#34;&#34;&#34;Kernel density estimation.
+    
+    Estimates a continuous probability distribution from discrete data using
+    kernel density estimation.
+    
+    Args:
+        x (numpy.array): Values at which to evaluate the estimated PDF.
+        y (numpy.array): Data to estimate the PDE from.
+        delta (float): Smoothing parameter.
+        f (optional): The kernel function to use. Should be positive semi-definite
+            and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.
+    &#34;&#34;&#34;
+    N = len(y)
+    M = len(x)
 
-from . import bonds
-from . import swaps
-from . import random_walk
-from . import volatility
-from . import data
-from . import utils</code></pre>
+    out = np.zeros(M)
+    for i in range(M):
+        out[i] = k((x[i] - y) / delta).sum()
+        
+    out *= (1.0 / (N * delta))
+    
+    return out</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></dt>
+<dt id="quantfin.data.smoothing.kde"><code class="name flex">
+<span>def <span class="ident">kde</span></span>(<span>x, y, delta, k=<function gaussian at 0x0000015DF41898C8>)</span>
+</code></dt>
 <dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.data" href="data/index.html">quantfin.data</a></code></dt>
-<dd>
-<section class="desc"><p>Algorithms for data analysis</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.random_walk" href="random_walk.html">quantfin.random_walk</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.utils" href="utils.html">quantfin.utils</a></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt><code class="name"><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></dt>
-<dd>
-<section class="desc"><p>Tools for calculating volatilty using various different models.</p></section>
+<section class="desc"><p>Kernel density estimation.</p>
+<p>Estimates a continuous probability distribution from discrete data using
+kernel density estimation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Values at which to evaluate the estimated PDF.</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Data to estimate the PDE from.</dd>
+<dt><strong><code>delta</code></strong> :&ensp;<code>float</code></dt>
+<dd>Smoothing parameter.</dd>
+<dt><strong><code>f</code></strong> :&ensp;optional</dt>
+<dd>The kernel function to use. Should be positive semi-definite
+and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def kde(x, y, delta, k=gaussian):
+    &#34;&#34;&#34;Kernel density estimation.
+    
+    Estimates a continuous probability distribution from discrete data using
+    kernel density estimation.
+    
+    Args:
+        x (numpy.array): Values at which to evaluate the estimated PDF.
+        y (numpy.array): Data to estimate the PDE from.
+        delta (float): Smoothing parameter.
+        f (optional): The kernel function to use. Should be positive semi-definite
+            and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.
+    &#34;&#34;&#34;
+    N = len(y)
+    M = len(x)
+
+    out = np.zeros(M)
+    for i in range(M):
+        out[i] = k((x[i] - y) / delta).sum()
+        
+    out *= (1.0 / (N * delta))
+    
+    return out</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -97,14 +116,14 @@ from . import utils</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></li>
-<li><code><a title="quantfin.data" href="data/index.html">quantfin.data</a></code></li>
-<li><code><a title="quantfin.random_walk" href="random_walk.html">quantfin.random_walk</a></code></li>
-<li><code><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></li>
-<li><code><a title="quantfin.utils" href="utils.html">quantfin.utils</a></code></li>
-<li><code><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></li>
+<li><code><a title="quantfin.data" href="index.html">quantfin.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="quantfin.data.smoothing.kde" href="#quantfin.data.smoothing.kde">kde</a></code></li>
 </ul>
 </li>
 </ul>
