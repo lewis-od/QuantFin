@@ -115,3 +115,22 @@ def fit_model(R, init=[5, 5, 5], verbose=False):
         raise RuntimeError("Unable to fit GARCH(1,1) model: " + res.message)
 
     return res.x
+
+def expected(params):
+    """Calculate the expected volatility predicted by the model.
+
+    Args:
+        params (numpy.array): The parameters from the fitted model of the form
+            `[alpha, beta, omega]`.
+
+    Raises:
+        ValueError: If the expected volatility is not well defined.
+    """
+    alpha, beta, omega = params
+    if omega < 0:
+        raise ValueError("Expected volatility not defined for omega < 0")
+
+    if alpha + beta > 1:
+        raise ValueError("Expected volatility not defined for alpha + beta < 1")
+
+    return np.sqrt(omega / (1 - alpha - beta))
