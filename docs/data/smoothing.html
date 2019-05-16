@@ -49,7 +49,46 @@ def kde(x, y, delta, k=gaussian):
         
     out *= (1.0 / (N * delta))
     
-    return out</code></pre>
+    return out
+
+def sma(y, n):
+    &#34;&#34;&#34;Simple moving average, SMA(n).
+    
+    Args:
+        y (numpy.array): Data to calculate moving average from.
+        n (int): Number of points to use when calculating moving avg.
+        
+    Returns:
+        An array of size `len(y) - n`.
+        
+    Raises:
+        ValueError: If `n &gt; len(y)`.
+    &#34;&#34;&#34;
+    N = len(y) - n
+    if n &lt; 0:
+        raise ValueError(&#34;Input doesn&#39;t contain enough data for moving average.&#34;)
+        
+    out = [y[i:i+n].mean() for i in range(len(y) - n)]
+    out = np.array(out)
+    
+    return out
+
+def ewma(y, alpha):
+    &#34;&#34;&#34;Exponentialy weighted moving average.
+    
+    Args:
+        y (numpy.array): Data to calculate the moving average from.
+        alpha (float): Smoothing parameter.
+        
+    Returns:
+        An array of size `len(y)`.
+    &#34;&#34;&#34;
+    avg = np.zeros(len(y))
+    avg[0] = y[0]
+    for i in range(1, len(y)):
+        avg[i] = alpha * y[i] + (1 - alpha) * avg[i - 1]
+    
+    return avg</code></pre>
 </details>
 </section>
 <section>
@@ -59,8 +98,42 @@ def kde(x, y, delta, k=gaussian):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="quantfin.data.smoothing.ewma"><code class="name flex">
+<span>def <span class="ident">ewma</span></span>(<span>y, alpha)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Exponentialy weighted moving average.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>y</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Data to calculate the moving average from.</dd>
+<dt><strong><code>alpha</code></strong> :&ensp;<code>float</code></dt>
+<dd>Smoothing parameter.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>An array of size <code>len(y)</code>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def ewma(y, alpha):
+    &#34;&#34;&#34;Exponentialy weighted moving average.
+    
+    Args:
+        y (numpy.array): Data to calculate the moving average from.
+        alpha (float): Smoothing parameter.
+        
+    Returns:
+        An array of size `len(y)`.
+    &#34;&#34;&#34;
+    avg = np.zeros(len(y))
+    avg[0] = y[0]
+    for i in range(1, len(y)):
+        avg[i] = alpha * y[i] + (1 - alpha) * avg[i - 1]
+    
+    return avg</code></pre>
+</details>
+</dd>
 <dt id="quantfin.data.smoothing.kde"><code class="name flex">
-<span>def <span class="ident">kde</span></span>(<span>x, y, delta, k=<function gaussian at 0x0000015DF41898C8>)</span>
+<span>def <span class="ident">kde</span></span>(<span>x, y, delta, k=<function gaussian at 0x00000299051398C8>)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Kernel density estimation.</p>
@@ -105,6 +178,50 @@ and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.</dd>
     return out</code></pre>
 </details>
 </dd>
+<dt id="quantfin.data.smoothing.sma"><code class="name flex">
+<span>def <span class="ident">sma</span></span>(<span>y, n)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Simple moving average, SMA(n).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>y</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Data to calculate moving average from.</dd>
+<dt><strong><code>n</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of points to use when calculating moving avg.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>An array of size <code>len(y) - n</code>.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><strong><code>ValueError</code></strong></dt>
+<dd>If <code>n &gt; len(y)</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def sma(y, n):
+    &#34;&#34;&#34;Simple moving average, SMA(n).
+    
+    Args:
+        y (numpy.array): Data to calculate moving average from.
+        n (int): Number of points to use when calculating moving avg.
+        
+    Returns:
+        An array of size `len(y) - n`.
+        
+    Raises:
+        ValueError: If `n &gt; len(y)`.
+    &#34;&#34;&#34;
+    N = len(y) - n
+    if n &lt; 0:
+        raise ValueError(&#34;Input doesn&#39;t contain enough data for moving average.&#34;)
+        
+    out = [y[i:i+n].mean() for i in range(len(y) - n)]
+    out = np.array(out)
+    
+    return out</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -123,7 +240,9 @@ and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.</dd>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="quantfin.data.smoothing.ewma" href="#quantfin.data.smoothing.ewma">ewma</a></code></li>
 <li><code><a title="quantfin.data.smoothing.kde" href="#quantfin.data.smoothing.kde">kde</a></code></li>
+<li><code><a title="quantfin.data.smoothing.sma" href="#quantfin.data.smoothing.sma">sma</a></code></li>
 </ul>
 </li>
 </ul>
