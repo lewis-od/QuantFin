@@ -1,3 +1,5 @@
+"""Methods for calculating quantities associaled with inetrest-rate swaps."""
+
 import numpy as np
 
 def swap_rate(T, rs, x=0.5):

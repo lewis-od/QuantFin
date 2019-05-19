@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin.bonds API documentation</title>
-<meta name="description" content="Methods relating to analysis of financial bonds." />
+<title>quantfin.random API documentation</title>
+<meta name="description" content="Methods for generating random data for use in Monte Carlo simulations." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -17,132 +17,29 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin.bonds</code></h1>
+<h1 class="title">Module <code>quantfin.random</code></h1>
 </header>
 <section id="section-intro">
-<p>Methods relating to analysis of financial bonds.</p>
+<p>Methods for generating random data for use in Monte Carlo simulations.</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;Methods relating to analysis of financial bonds.&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;Methods for generating random data for use in Monte Carlo simulations.&#34;&#34;&#34;
 
-import numpy as np
-from scipy.optimize import root
-
-def yield_to_maturity(M, P, C, T, t, m):
-    &#34;&#34;&#34;Calculates the yield to maturity of a bond.
-
-    Scipy is used to solve the implicit equation relating the bond&#39;s value and
-    its yield to maturity: `M = P*exp[-y(T - t))] + sum_{i}[C*exp(-y(T - t_i))]`
-    where `t_i` are the dates of the coupon payments.
-
-    Args:
-        M (float): Market value of bond.
-        P (float): Principal of bond.
-        C (float): The value of each coupon payment.
-        T (float): Redemtion time/date of the bond.
-        t (float): Current time (in same units as `T`).
-        m (float): Fraction of the year coupon payments are made (e.g. 0.5
-            for bi-annually).
-
-    Returns:
-        The yield to maturity value calculated.
-
-    Raises:
-        RuntimeError: If the root finding fails.
-    &#34;&#34;&#34;
-    ti = np.arange(t, T, m)
-
-    # M = P*exp[-y(T - t))] + sum_{i}[C*exp(-y(T - t_i))]
-    def f(y):
-        return P*np.exp(-y*(T - t)) + C*np.exp(-y *(ti - t)).sum() - M
-
-    y0 = 3*C / P # Initial guess - midpoint of 2C/P and 4C/P
-    res = root(f, y0)
-
-    if not res.success:
-        raise RuntimeError(&#34;Failed to find root: &#34; + res.message)
-
-    return res.x[0]</code></pre>
+from . import walk</code></pre>
 </details>
 </section>
 <section>
-</section>
-<section>
-</section>
-<section>
-<h2 class="section-title" id="header-functions">Functions</h2>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt id="quantfin.bonds.yield_to_maturity"><code class="name flex">
-<span>def <span class="ident">yield_to_maturity</span></span>(<span>M, P, C, T, t, m)</span>
-</code></dt>
+<dt><code class="name"><a title="quantfin.random.walk" href="walk.html">quantfin.random.walk</a></code></dt>
 <dd>
-<section class="desc"><p>Calculates the yield to maturity of a bond.</p>
-<p>Scipy is used to solve the implicit equation relating the bond's value and
-its yield to maturity: <code>M = P*exp[-y(T - t))] + sum_{i}[C*exp(-y(T - t_i))]</code>
-where <code>t_i</code> are the dates of the coupon payments.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>M</code></strong> :&ensp;<code>float</code></dt>
-<dd>Market value of bond.</dd>
-<dt><strong><code>P</code></strong> :&ensp;<code>float</code></dt>
-<dd>Principal of bond.</dd>
-<dt><strong><code>C</code></strong> :&ensp;<code>float</code></dt>
-<dd>The value of each coupon payment.</dd>
-<dt><strong><code>T</code></strong> :&ensp;<code>float</code></dt>
-<dd>Redemtion time/date of the bond.</dd>
-<dt><strong><code>t</code></strong> :&ensp;<code>float</code></dt>
-<dd>Current time (in same units as <code>T</code>).</dd>
-<dt><strong><code>m</code></strong> :&ensp;<code>float</code></dt>
-<dd>Fraction of the year coupon payments are made (e.g. 0.5
-for bi-annually).</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>The yield to maturity value calculated.</p>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><strong><code>RuntimeError</code></strong></dt>
-<dd>If the root finding fails.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def yield_to_maturity(M, P, C, T, t, m):
-    &#34;&#34;&#34;Calculates the yield to maturity of a bond.
-
-    Scipy is used to solve the implicit equation relating the bond&#39;s value and
-    its yield to maturity: `M = P*exp[-y(T - t))] + sum_{i}[C*exp(-y(T - t_i))]`
-    where `t_i` are the dates of the coupon payments.
-
-    Args:
-        M (float): Market value of bond.
-        P (float): Principal of bond.
-        C (float): The value of each coupon payment.
-        T (float): Redemtion time/date of the bond.
-        t (float): Current time (in same units as `T`).
-        m (float): Fraction of the year coupon payments are made (e.g. 0.5
-            for bi-annually).
-
-    Returns:
-        The yield to maturity value calculated.
-
-    Raises:
-        RuntimeError: If the root finding fails.
-    &#34;&#34;&#34;
-    ti = np.arange(t, T, m)
-
-    # M = P*exp[-y(T - t))] + sum_{i}[C*exp(-y(T - t_i))]
-    def f(y):
-        return P*np.exp(-y*(T - t)) + C*np.exp(-y *(ti - t)).sum() - M
-
-    y0 = 3*C / P # Initial guess - midpoint of 2C/P and 4C/P
-    res = root(f, y0)
-
-    if not res.success:
-        raise RuntimeError(&#34;Failed to find root: &#34; + res.message)
-
-    return res.x[0]</code></pre>
-</details>
+<section class="desc"><p>Methods for generating different types of random walk.</p></section>
 </dd>
 </dl>
+</section>
+<section>
+</section>
+<section>
 </section>
 <section>
 </section>
@@ -155,12 +52,12 @@ for bi-annually).</dd>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="quantfin" href="index.html">quantfin</a></code></li>
+<li><code><a title="quantfin" href="../index.html">quantfin</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="quantfin.bonds.yield_to_maturity" href="#quantfin.bonds.yield_to_maturity">yield_to_maturity</a></code></li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="quantfin.random.walk" href="walk.html">quantfin.random.walk</a></code></li>
 </ul>
 </li>
 </ul>

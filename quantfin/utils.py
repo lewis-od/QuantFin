@@ -1,3 +1,5 @@
+"""Various utility functions."""
+
 import numpy as np
 
 def annualise_volatility(sigma, N=250):

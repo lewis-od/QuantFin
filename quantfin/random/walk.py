@@ -1,3 +1,5 @@
+"""Methods for generating different types of random walk."""
+
 import numpy as np
 
 def geometric_brownian(N, S0, mu, sigma):

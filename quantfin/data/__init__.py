@@ -1,4 +1,4 @@
-"""Algorithms for data analysis"""
+"""Algorithms for data analysis."""
 
-from . import dist
+from . import kernels
 from . import smoothing

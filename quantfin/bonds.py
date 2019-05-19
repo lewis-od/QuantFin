@@ -1,3 +1,5 @@
+"""Methods relating to analysis of financial bonds."""
+
 import numpy as np
 from scipy.optimize import root
 
