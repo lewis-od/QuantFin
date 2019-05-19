@@ -25,31 +25,6 @@
 <summary>Source code</summary>
 <pre><code class="python">&#34;&#34;&#34;Various data smoothing methods&#34;&#34;&#34;
 import numpy as np
-from .kernels import gaussian
-
-def kde(x, y, delta, k=gaussian):
-    &#34;&#34;&#34;Kernel density estimation.
-
-    Estimates a continuous probability distribution from discrete data using
-    kernel density estimation.
-
-    Args:
-        x (numpy.array): Values at which to evaluate the estimated PDF.
-        y (numpy.array): Data to estimate the PDE from.
-        delta (float): Smoothing parameter.
-        f (optional): The kernel function to use. Should be positive semi-definite
-            and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.
-    &#34;&#34;&#34;
-    N = len(y)
-    M = len(x)
-
-    out = np.zeros(M)
-    for i in range(M):
-        out[i] = k((x[i] - y) / delta).sum()
-
-    out *= (1.0 / (N * delta))
-
-    return out
 
 def sma(y, n):
     &#34;&#34;&#34;Simple moving average, SMA(n).
@@ -132,52 +107,6 @@ def ewma(y, alpha):
     return avg</code></pre>
 </details>
 </dd>
-<dt id="quantfin.stats.smoothing.kde"><code class="name flex">
-<span>def <span class="ident">kde</span></span>(<span>x, y, delta, k=<function gaussian at 0x000001E8FFED2A60>)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Kernel density estimation.</p>
-<p>Estimates a continuous probability distribution from discrete data using
-kernel density estimation.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>x</code></strong> :&ensp;<code>numpy.array</code></dt>
-<dd>Values at which to evaluate the estimated PDF.</dd>
-<dt><strong><code>y</code></strong> :&ensp;<code>numpy.array</code></dt>
-<dd>Data to estimate the PDE from.</dd>
-<dt><strong><code>delta</code></strong> :&ensp;<code>float</code></dt>
-<dd>Smoothing parameter.</dd>
-<dt><strong><code>f</code></strong> :&ensp;optional</dt>
-<dd>The kernel function to use. Should be positive semi-definite
-and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def kde(x, y, delta, k=gaussian):
-    &#34;&#34;&#34;Kernel density estimation.
-
-    Estimates a continuous probability distribution from discrete data using
-    kernel density estimation.
-
-    Args:
-        x (numpy.array): Values at which to evaluate the estimated PDF.
-        y (numpy.array): Data to estimate the PDE from.
-        delta (float): Smoothing parameter.
-        f (optional): The kernel function to use. Should be positive semi-definite
-            and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.
-    &#34;&#34;&#34;
-    N = len(y)
-    M = len(x)
-
-    out = np.zeros(M)
-    for i in range(M):
-        out[i] = k((x[i] - y) / delta).sum()
-
-    out *= (1.0 / (N * delta))
-
-    return out</code></pre>
-</details>
-</dd>
 <dt id="quantfin.stats.smoothing.sma"><code class="name flex">
 <span>def <span class="ident">sma</span></span>(<span>y, n)</span>
 </code></dt>
@@ -241,7 +170,6 @@ and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.</dd>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="quantfin.stats.smoothing.ewma" href="#quantfin.stats.smoothing.ewma">ewma</a></code></li>
-<li><code><a title="quantfin.stats.smoothing.kde" href="#quantfin.stats.smoothing.kde">kde</a></code></li>
 <li><code><a title="quantfin.stats.smoothing.sma" href="#quantfin.stats.smoothing.sma">sma</a></code></li>
 </ul>
 </li>
