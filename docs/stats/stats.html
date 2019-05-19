@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin.data.analysis API documentation</title>
+<title>quantfin.stats.stats API documentation</title>
 <meta name="description" content="Tools for fitting distributions to data." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin.data.analysis</code></h1>
+<h1 class="title">Module <code>quantfin.stats.stats</code></h1>
 </header>
 <section id="section-intro">
 <p>Tools for fitting distributions to data.</p>
@@ -158,7 +158,7 @@ def fit_mixed_gaussian(x, K, epsilon=1e-4, maxiter=500):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="quantfin.data.analysis.fit_mixed_gaussian"><code class="name flex">
+<dt id="quantfin.stats.stats.fit_mixed_gaussian"><code class="name flex">
 <span>def <span class="ident">fit_mixed_gaussian</span></span>(<span>x, K, epsilon=0.0001, maxiter=500)</span>
 </code></dt>
 <dd>
@@ -269,8 +269,8 @@ distribution in the mixture.</p>
     return (mu, sigma, r)</code></pre>
 </details>
 </dd>
-<dt id="quantfin.data.analysis.quantile_quantile"><code class="name flex">
-<span>def <span class="ident">quantile_quantile</span></span>(<span>x, dist=<scipy.stats._continuous_distns.norm_gen object at 0x0000024D993B7F28>)</span>
+<dt id="quantfin.stats.stats.quantile_quantile"><code class="name flex">
+<span>def <span class="ident">quantile_quantile</span></span>(<span>x, dist=<scipy.stats._continuous_distns.norm_gen object at 0x000001E8801C7EB8>)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Calculates theoretical and actual quantiles of a data set for a QQ plot.</p>
@@ -313,7 +313,7 @@ quantile values calculated from the theoretical distribution, and
     return (z_pred, z)</code></pre>
 </details>
 </dd>
-<dt id="quantfin.data.analysis.standardise"><code class="name flex">
+<dt id="quantfin.stats.stats.standardise"><code class="name flex">
 <span>def <span class="ident">standardise</span></span>(<span>x)</span>
 </code></dt>
 <dd>
@@ -360,14 +360,14 @@ quantile values calculated from the theoretical distribution, and
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="quantfin.data" href="index.html">quantfin.data</a></code></li>
+<li><code><a title="quantfin.stats" href="index.html">quantfin.stats</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="quantfin.data.analysis.fit_mixed_gaussian" href="#quantfin.data.analysis.fit_mixed_gaussian">fit_mixed_gaussian</a></code></li>
-<li><code><a title="quantfin.data.analysis.quantile_quantile" href="#quantfin.data.analysis.quantile_quantile">quantile_quantile</a></code></li>
-<li><code><a title="quantfin.data.analysis.standardise" href="#quantfin.data.analysis.standardise">standardise</a></code></li>
+<li><code><a title="quantfin.stats.stats.fit_mixed_gaussian" href="#quantfin.stats.stats.fit_mixed_gaussian">fit_mixed_gaussian</a></code></li>
+<li><code><a title="quantfin.stats.stats.quantile_quantile" href="#quantfin.stats.stats.quantile_quantile">quantile_quantile</a></code></li>
+<li><code><a title="quantfin.stats.stats.standardise" href="#quantfin.stats.stats.standardise">standardise</a></code></li>
 </ul>
 </li>
 </ul>

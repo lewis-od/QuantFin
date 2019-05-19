@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin.data.smoothing API documentation</title>
+<title>quantfin.stats.smoothing API documentation</title>
 <meta name="description" content="Various data smoothing methods" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin.data.smoothing</code></h1>
+<h1 class="title">Module <code>quantfin.stats.smoothing</code></h1>
 </header>
 <section id="section-intro">
 <p>Various data smoothing methods</p>
@@ -98,7 +98,7 @@ def ewma(y, alpha):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="quantfin.data.smoothing.ewma"><code class="name flex">
+<dt id="quantfin.stats.smoothing.ewma"><code class="name flex">
 <span>def <span class="ident">ewma</span></span>(<span>y, alpha)</span>
 </code></dt>
 <dd>
@@ -132,8 +132,8 @@ def ewma(y, alpha):
     return avg</code></pre>
 </details>
 </dd>
-<dt id="quantfin.data.smoothing.kde"><code class="name flex">
-<span>def <span class="ident">kde</span></span>(<span>x, y, delta, k=<function gaussian at 0x0000024D990C2A60>)</span>
+<dt id="quantfin.stats.smoothing.kde"><code class="name flex">
+<span>def <span class="ident">kde</span></span>(<span>x, y, delta, k=<function gaussian at 0x000001E8FFED2A60>)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Kernel density estimation.</p>
@@ -178,7 +178,7 @@ and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.</dd>
     return out</code></pre>
 </details>
 </dd>
-<dt id="quantfin.data.smoothing.sma"><code class="name flex">
+<dt id="quantfin.stats.smoothing.sma"><code class="name flex">
 <span>def <span class="ident">sma</span></span>(<span>y, n)</span>
 </code></dt>
 <dd>
@@ -235,14 +235,14 @@ and normalised (i.e. a valid PDF). Defaults to a Gaussian distribution.</dd>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="quantfin.data" href="index.html">quantfin.data</a></code></li>
+<li><code><a title="quantfin.stats" href="index.html">quantfin.stats</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="quantfin.data.smoothing.ewma" href="#quantfin.data.smoothing.ewma">ewma</a></code></li>
-<li><code><a title="quantfin.data.smoothing.kde" href="#quantfin.data.smoothing.kde">kde</a></code></li>
-<li><code><a title="quantfin.data.smoothing.sma" href="#quantfin.data.smoothing.sma">sma</a></code></li>
+<li><code><a title="quantfin.stats.smoothing.ewma" href="#quantfin.stats.smoothing.ewma">ewma</a></code></li>
+<li><code><a title="quantfin.stats.smoothing.kde" href="#quantfin.stats.smoothing.kde">kde</a></code></li>
+<li><code><a title="quantfin.stats.smoothing.sma" href="#quantfin.stats.smoothing.sma">sma</a></code></li>
 </ul>
 </li>
 </ul>

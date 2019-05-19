@@ -7,5 +7,5 @@ from . import bonds
 from . import swaps
 from . import random
 from . import volatility
-from . import data
+from . import stats
 from . import utils

@@ -1,5 +1,5 @@
 """Algorithms for data analysis."""
 
-from . import analysis
+from .stats import *
 from . import kernels
 from . import smoothing
