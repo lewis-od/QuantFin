@@ -27,6 +27,7 @@
 
 import numpy as np
 from scipy.stats import norm
+from .kernels import gaussian
 
 def standardise(x):
     &#34;&#34;&#34;Transforms data so that it has mean 0 and standard deviation 1.
@@ -66,7 +67,88 @@ def quantile_quantile(x, dist=norm):
     p = np.array([(i - 0.5)/N for i in range(1, N+1)])
     z_pred = dist.ppf(p)
 
-    return (z_pred, z)</code></pre>
+    return (z_pred, z)
+
+def fit_mixed_gaussian(x, K, epsilon=1e-4, maxiter=500):
+    &#34;&#34;&#34;Fits a mixed Gaussian distribution to the data.
+
+    Fits a weighted sum of Gaussian distributions to data using the maximum
+    expectation method.
+
+    Args:
+        x (numpy.array): Data to fit to.
+        K (int): Number of Gaussians to use in the mixture.
+        epsilon (float, optional): Accuracy to solve to.
+        maxiter (int, optional): Max number of iterations.
+
+    Returns:
+        A tuple of numpy arrays `(mu, sigma, r)`. The kth entry of each array
+        contains the mean/standard deviation/weight of the kth Gaussian
+        distribution in the mixture.
+
+    Raises:
+        RuntimeError: If the iteration fails to converge.
+    &#34;&#34;&#34;
+    N_x = len(x) # Number of data points
+    r = np.ones(K) / N_x # Weights of each Gaussian
+    mu = np.zeros(K) # Means of each Gaussian
+    sigma = np.ones(K) # Variance of each Gaussian
+    def g(y_n, k):
+        # g(x_n; mu_k, sigma_k) =
+        # r_k * phi(x_n; mu_k sigma_k) / sum_{j=1}^{K} r_j phi(x_n; mu_k, sigma_j)
+        denom = (r * gaussian((y_n - mu) / sigma)).sum()
+        return (r[k] * gaussian((y_n - mu[k]) / sigma[k])) / denom
+
+    def N(k):
+        # N_k = sum_{n=1}^{N} g(x_n; mu_k, sigma_k)
+        g_vals = np.array([g(x_n, k) for x_n in x])
+        return g_vals.sum()
+
+    def update_mu(k):
+        # mu_k = (1/N_k) * sum_{n=1}^{N} g(x_n; mu_k, sigma_k) * x_n
+        summand = np.array([g(x_n, k) * x_n for x_n in x])
+        return summand.sum() / N(k)
+
+    def update_sigma(k):
+        # sigma^2_k = (1/N_k) * sum_{n=1}^{N} g(x_n; mu_k, sigma_k) * (x_n - mu_k)^2
+        summand = np.array([g(x_n, k) * (x_n - mu[k])**2 for x_n in x])
+        return np.sqrt(summand.sum() / N(k))
+
+    def update_r(k):
+        # r_k = N_k / N
+        return N(k) / N_x
+
+    def log_L():
+        # ln(L) = sum_{n=1}^{N} ln(sum_{k=1}^{K} r_k phi(x_n; mu_k, sigma_k))
+        out = 0.0
+        for n in range(N_x):
+            out += np.log((r * gaussian((x[n] - mu)/sigma)).sum())
+        return out
+
+    n_iter = 0
+    prev_L = log_L()
+    while True:
+        if n_iter &gt; maxiter:
+            # Raise exception when max iterations reached
+            raise RuntimeError(&#34;Max iterations exceeded.&#34;)
+
+        # Update our guess for each parameter
+        for k in range(K):
+            mu[k] = update_mu(k)
+            sigma[k] = update_sigma(k)
+            r[k] = update_r(k)
+
+        # Calculate new value of ln(L)
+        new_L = log_L()
+        if abs(new_L - prev_L) &lt; epsilon:
+            # Iteration has converged
+            break
+
+        # Update value of ln(L)
+        prev_L = new_L
+
+    sigma = sigma
+    return (mu, sigma, r)</code></pre>
 </details>
 </section>
 <section>
@@ -76,8 +158,119 @@ def quantile_quantile(x, dist=norm):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="quantfin.data.analysis.fit_mixed_gaussian"><code class="name flex">
+<span>def <span class="ident">fit_mixed_gaussian</span></span>(<span>x, K, epsilon=0.0001, maxiter=500)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fits a mixed Gaussian distribution to the data.</p>
+<p>Fits a weighted sum of Gaussian distributions to data using the maximum
+expectation method.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Data to fit to.</dd>
+<dt><strong><code>K</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of Gaussians to use in the mixture.</dd>
+<dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Accuracy to solve to.</dd>
+<dt><strong><code>maxiter</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Max number of iterations.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A tuple of numpy arrays <code>(mu, sigma, r)</code>. The kth entry of each array
+contains the mean/standard deviation/weight of the kth Gaussian
+distribution in the mixture.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><strong><code>RuntimeError</code></strong></dt>
+<dd>If the iteration fails to converge.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def fit_mixed_gaussian(x, K, epsilon=1e-4, maxiter=500):
+    &#34;&#34;&#34;Fits a mixed Gaussian distribution to the data.
+
+    Fits a weighted sum of Gaussian distributions to data using the maximum
+    expectation method.
+
+    Args:
+        x (numpy.array): Data to fit to.
+        K (int): Number of Gaussians to use in the mixture.
+        epsilon (float, optional): Accuracy to solve to.
+        maxiter (int, optional): Max number of iterations.
+
+    Returns:
+        A tuple of numpy arrays `(mu, sigma, r)`. The kth entry of each array
+        contains the mean/standard deviation/weight of the kth Gaussian
+        distribution in the mixture.
+
+    Raises:
+        RuntimeError: If the iteration fails to converge.
+    &#34;&#34;&#34;
+    N_x = len(x) # Number of data points
+    r = np.ones(K) / N_x # Weights of each Gaussian
+    mu = np.zeros(K) # Means of each Gaussian
+    sigma = np.ones(K) # Variance of each Gaussian
+    def g(y_n, k):
+        # g(x_n; mu_k, sigma_k) =
+        # r_k * phi(x_n; mu_k sigma_k) / sum_{j=1}^{K} r_j phi(x_n; mu_k, sigma_j)
+        denom = (r * gaussian((y_n - mu) / sigma)).sum()
+        return (r[k] * gaussian((y_n - mu[k]) / sigma[k])) / denom
+
+    def N(k):
+        # N_k = sum_{n=1}^{N} g(x_n; mu_k, sigma_k)
+        g_vals = np.array([g(x_n, k) for x_n in x])
+        return g_vals.sum()
+
+    def update_mu(k):
+        # mu_k = (1/N_k) * sum_{n=1}^{N} g(x_n; mu_k, sigma_k) * x_n
+        summand = np.array([g(x_n, k) * x_n for x_n in x])
+        return summand.sum() / N(k)
+
+    def update_sigma(k):
+        # sigma^2_k = (1/N_k) * sum_{n=1}^{N} g(x_n; mu_k, sigma_k) * (x_n - mu_k)^2
+        summand = np.array([g(x_n, k) * (x_n - mu[k])**2 for x_n in x])
+        return np.sqrt(summand.sum() / N(k))
+
+    def update_r(k):
+        # r_k = N_k / N
+        return N(k) / N_x
+
+    def log_L():
+        # ln(L) = sum_{n=1}^{N} ln(sum_{k=1}^{K} r_k phi(x_n; mu_k, sigma_k))
+        out = 0.0
+        for n in range(N_x):
+            out += np.log((r * gaussian((x[n] - mu)/sigma)).sum())
+        return out
+
+    n_iter = 0
+    prev_L = log_L()
+    while True:
+        if n_iter &gt; maxiter:
+            # Raise exception when max iterations reached
+            raise RuntimeError(&#34;Max iterations exceeded.&#34;)
+
+        # Update our guess for each parameter
+        for k in range(K):
+            mu[k] = update_mu(k)
+            sigma[k] = update_sigma(k)
+            r[k] = update_r(k)
+
+        # Calculate new value of ln(L)
+        new_L = log_L()
+        if abs(new_L - prev_L) &lt; epsilon:
+            # Iteration has converged
+            break
+
+        # Update value of ln(L)
+        prev_L = new_L
+
+    sigma = sigma
+    return (mu, sigma, r)</code></pre>
+</details>
+</dd>
 <dt id="quantfin.data.analysis.quantile_quantile"><code class="name flex">
-<span>def <span class="ident">quantile_quantile</span></span>(<span>x, dist=<scipy.stats._continuous_distns.norm_gen object at 0x000002B859266B70>)</span>
+<span>def <span class="ident">quantile_quantile</span></span>(<span>x, dist=<scipy.stats._continuous_distns.norm_gen object at 0x0000024D993B7F28>)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Calculates theoretical and actual quantiles of a data set for a QQ plot.</p>
@@ -172,6 +365,7 @@ quantile values calculated from the theoretical distribution, and
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="quantfin.data.analysis.fit_mixed_gaussian" href="#quantfin.data.analysis.fit_mixed_gaussian">fit_mixed_gaussian</a></code></li>
 <li><code><a title="quantfin.data.analysis.quantile_quantile" href="#quantfin.data.analysis.quantile_quantile">quantile_quantile</a></code></li>
 <li><code><a title="quantfin.data.analysis.standardise" href="#quantfin.data.analysis.standardise">standardise</a></code></li>
 </ul>
