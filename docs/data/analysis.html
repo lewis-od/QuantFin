@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin.data API documentation</title>
-<meta name="description" content="Algorithms for data analysis." />
+<title>quantfin.data.analysis API documentation</title>
+<meta name="description" content="Tools for fitting distributions to data." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -17,39 +17,144 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin.data</code></h1>
+<h1 class="title">Module <code>quantfin.data.analysis</code></h1>
 </header>
 <section id="section-intro">
-<p>Algorithms for data analysis.</p>
+<p>Tools for fitting distributions to data.</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;Algorithms for data analysis.&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;Tools for fitting distributions to data.&#34;&#34;&#34;
 
-from . import analysis
-from . import kernels
-from . import smoothing</code></pre>
+import numpy as np
+from scipy.stats import norm
+
+def standardise(x):
+    &#34;&#34;&#34;Transforms data so that it has mean 0 and standard deviation 1.
+
+    The transform is given by:
+
+        z_i = (x_i - mu) / sigma
+
+    where `mu` is the mean and `sigma` is the standard deviation of the data.
+
+    Args:
+        x (numpy.array): Data to transform.
+    &#34;&#34;&#34;
+    mu = x.mean()
+    sigma = x.std()
+
+    return (x - mu) / sigma
+
+def quantile_quantile(x, dist=norm):
+    &#34;&#34;&#34;Calculates theoretical and actual quantiles of a data set for a QQ plot.
+
+    Args:
+        x (numpy.array): The data to analyse.
+        dist (scipy.stats.rv_continuous, optional): The distribution to use
+            when calculating theoretical quantiles. Must have a `ppf` method.
+            Defaults to `scipy.stats.norm`.
+
+    Returns:
+        A tuple `(z_theoretical, z_ordered)`, where `z_theoretical` are the
+        quantile values calculated from the theoretical distribution, and
+        `z_ordered` are the quantiles calculated from the ordered data.
+    &#34;&#34;&#34;
+    N = len(x)
+    z = standardise(x)
+    z.sort()
+
+    p = np.array([(i - 0.5)/N for i in range(1, N+1)])
+    z_pred = dist.ppf(p)
+
+    return (z_pred, z)</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="quantfin.data.analysis" href="analysis.html">quantfin.data.analysis</a></code></dt>
+<dt id="quantfin.data.analysis.quantile_quantile"><code class="name flex">
+<span>def <span class="ident">quantile_quantile</span></span>(<span>x, dist=<scipy.stats._continuous_distns.norm_gen object at 0x000002B859266B70>)</span>
+</code></dt>
 <dd>
-<section class="desc"><p>Tools for fitting distributions to data.</p></section>
+<section class="desc"><p>Calculates theoretical and actual quantiles of a data set for a QQ plot.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>The data to analyse.</dd>
+<dt><strong><code>dist</code></strong> :&ensp;<code>scipy.stats.rv_continuous</code>, optional</dt>
+<dd>The distribution to use
+when calculating theoretical quantiles. Must have a <code>ppf</code> method.
+Defaults to <code>scipy.stats.norm</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A tuple <code>(z_theoretical, z_ordered)</code>, where <code>z_theoretical</code> are the
+quantile values calculated from the theoretical distribution, and
+<code>z_ordered</code> are the quantiles calculated from the ordered data.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def quantile_quantile(x, dist=norm):
+    &#34;&#34;&#34;Calculates theoretical and actual quantiles of a data set for a QQ plot.
+
+    Args:
+        x (numpy.array): The data to analyse.
+        dist (scipy.stats.rv_continuous, optional): The distribution to use
+            when calculating theoretical quantiles. Must have a `ppf` method.
+            Defaults to `scipy.stats.norm`.
+
+    Returns:
+        A tuple `(z_theoretical, z_ordered)`, where `z_theoretical` are the
+        quantile values calculated from the theoretical distribution, and
+        `z_ordered` are the quantiles calculated from the ordered data.
+    &#34;&#34;&#34;
+    N = len(x)
+    z = standardise(x)
+    z.sort()
+
+    p = np.array([(i - 0.5)/N for i in range(1, N+1)])
+    z_pred = dist.ppf(p)
+
+    return (z_pred, z)</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="quantfin.data.kernels" href="kernels.html">quantfin.data.kernels</a></code></dt>
+<dt id="quantfin.data.analysis.standardise"><code class="name flex">
+<span>def <span class="ident">standardise</span></span>(<span>x)</span>
+</code></dt>
 <dd>
-<section class="desc"><p>Kernel functions for use in kernel density estimation.</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.data.smoothing" href="smoothing.html">quantfin.data.smoothing</a></code></dt>
-<dd>
-<section class="desc"><p>Various data smoothing methods</p></section>
+<section class="desc"><p>Transforms data so that it has mean 0 and standard deviation 1.</p>
+<p>The transform is given by:</p>
+<pre><code>z_i = (x_i - mu) / sigma
+</code></pre>
+<p>where <code>mu</code> is the mean and <code>sigma</code> is the standard deviation of the data.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>Data to transform.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def standardise(x):
+    &#34;&#34;&#34;Transforms data so that it has mean 0 and standard deviation 1.
+
+    The transform is given by:
+
+        z_i = (x_i - mu) / sigma
+
+    where `mu` is the mean and `sigma` is the standard deviation of the data.
+
+    Args:
+        x (numpy.array): Data to transform.
+    &#34;&#34;&#34;
+    mu = x.mean()
+    sigma = x.std()
+
+    return (x - mu) / sigma</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -62,14 +167,13 @@ from . import smoothing</code></pre>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="quantfin" href="../index.html">quantfin</a></code></li>
+<li><code><a title="quantfin.data" href="index.html">quantfin.data</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="quantfin.data.analysis" href="analysis.html">quantfin.data.analysis</a></code></li>
-<li><code><a title="quantfin.data.kernels" href="kernels.html">quantfin.data.kernels</a></code></li>
-<li><code><a title="quantfin.data.smoothing" href="smoothing.html">quantfin.data.smoothing</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="quantfin.data.analysis.quantile_quantile" href="#quantfin.data.analysis.quantile_quantile">quantile_quantile</a></code></li>
+<li><code><a title="quantfin.data.analysis.standardise" href="#quantfin.data.analysis.standardise">standardise</a></code></li>
 </ul>
 </li>
 </ul>
