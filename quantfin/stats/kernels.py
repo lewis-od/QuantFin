@@ -1,9 +1,13 @@
 """Kernel functions for use in kernel density estimation."""
 import numpy as np
+from .pdfs import gaussian as gaussian_pde
+# NOTE: Could just `from .pdfs import gaussian` and this would work, but then
+# we'd have no documentation that the Gaussian kernel can be accessed in this
+# way.
 
 def gaussian(x):
     """Gaussian distribution with mean 0 and standard deviation 1."""
-    return (1.0 / np.sqrt(2*np.pi)) * np.exp(-(x ** 2) / 2)
+    return gaussian_pde(x)
 
 def epanechnikov(x):
     """Epanechnikov kernel.
