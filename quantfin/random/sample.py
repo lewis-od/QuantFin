@@ -2,31 +2,50 @@
 
 import numpy as np
 
-def mixed_gaussian(mu1, sigma1, mu2, sigma2, r, shape=(1,)):
+def mixed_gaussian(mus, sigmas, rs, size=1):
     """Sample numbers from a mixed Gaussian distribution.
 
     The distribution has the probability density function:
 
-        P(x) = r*phi(x; mu_1, sigma_1) + (1 - r)*phi(x; mu_2, sigma_2)
+        P(x) = sum_{k} r_k*phi(x; mu_k, sigma_k)
+
+        provided sum_{k} r_k = 1
 
     Where `phi(x; mu, sigma)` is the univariate Gaussian distribution with mean
     `mu` and standard deviation `sigma`.
 
     Args:
-        mu1 (float): Mean of 1st Guassian distribution.
-        sigma1 (float): Standard deviation of 1st Gaussian distribution.
-        mu2 (float): Mean of 2nd Gaussian distribution.
-        sigma2 (float): Standard deviation of 2nd Gaussian distribution.
-        r (float): Mixture ratio. Should be in the range [0, 1].
-        shape (tuple, optional): Shape of the output array. Defualts to (1,).
+        mus (numpy.array): Means of each Gaussian in the mixture.
+        sigmas (numpy.array): Stdevs of each Gaussian.
+        r (numpy.array): Weights of each Gaussian. Should sum to 1.
+        size (int, optional): Size of the output array.
 
     Returns:
-        A numpy array of shape `shape` containing numbers sampled from the
-        distribution.
-    """
-    n1 = np.random.normal(mu1, sigma1, size=shape)
-    n2 = np.random.normal(mu2, sigma2, size=shape)
-    rs = np.random.uniform(0, 1, shape)
-    n1[rs > r] = n2[rs > r]
+        A numpy array containing numbers sampled from the distribution.
 
-    return n1
+    Raises:
+        ValueError: If `mus`, `sigmas`, and `rs` aren't all the same length.
+    """
+    if len(mus) != len(sigmas) or len(sigmas) != len(rs):
+        raise ValueError("mus, sigmas, and rs must all be the same size.")
+
+    if len(mus) == 1:
+        raise ValueError("Can't create mixed Gaussian dist. from 1 Gaussian.")
+
+    if not isinstance(rs, np.ndarray):
+        rs = np.array(rs)
+
+    intervals = rs.cumsum() # Split [0,1] into appropriately weighted intervals
+    vals = np.zeros(size) # Output values
+    # import pdb; pdb.set_trace()
+    for n in range(size):
+        # Generate a random number on [0,1]
+        r = np.random.uniform(0, 1)
+        for k in range(len(intervals)):
+            if r < intervals[k]:
+                # If it's in the kth interval, sample from a Gaussian dist.
+                # with mean mu_k and stdev sigma_k
+                vals[n] = np.random.normal(mus[k], sigmas[k])
+                break
+
+    return vals
