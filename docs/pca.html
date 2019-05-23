@@ -1,12 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.1" />
-<title>quantfin API documentation</title>
-<meta name="description" content="A python module for performing various quantitative finance calculations. Very
-much work in progress." />
+<title>quantfin.pca API documentation</title>
+<meta name="description" content="Principal component analysis." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -18,63 +17,132 @@ much work in progress." />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>quantfin</code></h1>
+<h1 class="title">Module <code>quantfin.pca</code></h1>
 </header>
 <section id="section-intro">
-<p>A python module for performing various quantitative finance calculations. Very
-much work in progress.</p>
+<p>Principal component analysis.</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;
-A python module for performing various quantitative finance calculations. Very
-much work in progress.
-&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;Principal component analysis.&#34;&#34;&#34;
 
-from . import bonds
-from . import pca
-from . import swaps
-from . import random
-from . import volatility
-from . import stats
-from . import utils</code></pre>
+import numpy as np
+
+def pca(data, epsilon=1e-5):
+    &#34;&#34;&#34;Principal component analysis.
+
+    Performs PCA using the NIPALS algorithm.
+
+    Args:
+        data (numpy.array): A matrix of data to perform PCA on.
+        epsilon (float, optional): Required accuracy for convergence.
+
+    Returns:
+        A tuple `(T, P)`, where T and P are matrices. The columns of T are the
+        principal components, and P is the matrix of weights.
+    &#34;&#34;&#34;
+    # Standardise data
+    mu = data.mean(axis=0)
+    sigma = data.std(axis=0)
+    X = (data - mu) / sigma
+
+    # Create empty T and P matrices
+    N, M = X.shape
+    T = np.zeros((N, M))
+    P = np.zeros((M, M))
+
+    # NIPALS algorithm
+    for j in range(M):
+        t_old = X[:, j] # Initial guess
+        while True:
+            p = X.T @ t_old
+            p /= np.linalg.norm(p)
+            t_new = X @ p
+            delta = np.linalg.norm(t_old - t_new) ** 2
+            if delta &lt; epsilon: # Required accuracy reached
+                break
+            t_old = t_new # Update guess for t
+
+        # Vectors t and p are columns of T and P
+        T[:, j] = t_new
+        P[:, j] = p
+
+        # Need to convert arrays of shape (N,) -&gt; (N,1) for matmul
+        X = X - (np.expand_dims(t_new, 1) @ np.expand_dims(p, 1).T)
+
+    return T, P</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></dt>
+<dt id="quantfin.pca.pca"><code class="name flex">
+<span>def <span class="ident">pca</span></span>(<span>data, epsilon=1e-05)</span>
+</code></dt>
 <dd>
-<section class="desc"><p>Methods relating to analysis of financial bonds.</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.pca" href="pca.html">quantfin.pca</a></code></dt>
-<dd>
-<section class="desc"><p>Principal component analysis.</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.random" href="random/index.html">quantfin.random</a></code></dt>
-<dd>
-<section class="desc"><p>Methods for generating random data for use in Monte Carlo simulations.</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.stats" href="stats/index.html">quantfin.stats</a></code></dt>
-<dd>
-<section class="desc"><p>Algorithms for data analysis.</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></dt>
-<dd>
-<section class="desc"><p>Methods for calculating quantities associaled with inetrest-rate swaps.</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.utils" href="utils.html">quantfin.utils</a></code></dt>
-<dd>
-<section class="desc"><p>Various utility functions.</p></section>
-</dd>
-<dt><code class="name"><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></dt>
-<dd>
-<section class="desc"><p>Tools for calculating volatilty using various different models.</p></section>
+<section class="desc"><p>Principal component analysis.</p>
+<p>Performs PCA using the NIPALS algorithm.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>numpy.array</code></dt>
+<dd>A matrix of data to perform PCA on.</dd>
+<dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Required accuracy for convergence.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A tuple <code>(T, P)</code>, where T and P are matrices. The columns of T are the
+principal components, and P is the matrix of weights.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def pca(data, epsilon=1e-5):
+    &#34;&#34;&#34;Principal component analysis.
+
+    Performs PCA using the NIPALS algorithm.
+
+    Args:
+        data (numpy.array): A matrix of data to perform PCA on.
+        epsilon (float, optional): Required accuracy for convergence.
+
+    Returns:
+        A tuple `(T, P)`, where T and P are matrices. The columns of T are the
+        principal components, and P is the matrix of weights.
+    &#34;&#34;&#34;
+    # Standardise data
+    mu = data.mean(axis=0)
+    sigma = data.std(axis=0)
+    X = (data - mu) / sigma
+
+    # Create empty T and P matrices
+    N, M = X.shape
+    T = np.zeros((N, M))
+    P = np.zeros((M, M))
+
+    # NIPALS algorithm
+    for j in range(M):
+        t_old = X[:, j] # Initial guess
+        while True:
+            p = X.T @ t_old
+            p /= np.linalg.norm(p)
+            t_new = X @ p
+            delta = np.linalg.norm(t_old - t_new) ** 2
+            if delta &lt; epsilon: # Required accuracy reached
+                break
+            t_old = t_new # Update guess for t
+
+        # Vectors t and p are columns of T and P
+        T[:, j] = t_new
+        P[:, j] = p
+
+        # Need to convert arrays of shape (N,) -&gt; (N,1) for matmul
+        X = X - (np.expand_dims(t_new, 1) @ np.expand_dims(p, 1).T)
+
+    return T, P</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -85,15 +153,14 @@ from . import utils</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="quantfin.bonds" href="bonds.html">quantfin.bonds</a></code></li>
-<li><code><a title="quantfin.pca" href="pca.html">quantfin.pca</a></code></li>
-<li><code><a title="quantfin.random" href="random/index.html">quantfin.random</a></code></li>
-<li><code><a title="quantfin.stats" href="stats/index.html">quantfin.stats</a></code></li>
-<li><code><a title="quantfin.swaps" href="swaps.html">quantfin.swaps</a></code></li>
-<li><code><a title="quantfin.utils" href="utils.html">quantfin.utils</a></code></li>
-<li><code><a title="quantfin.volatility" href="volatility/index.html">quantfin.volatility</a></code></li>
+<li><code><a title="quantfin" href="index.html">quantfin</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="quantfin.pca.pca" href="#quantfin.pca.pca">pca</a></code></li>
 </ul>
 </li>
 </ul>

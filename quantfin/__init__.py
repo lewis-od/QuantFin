@@ -4,6 +4,7 @@ much work in progress.
 """
 
 from . import bonds
+from . import pca
 from . import swaps
 from . import random
 from . import volatility
