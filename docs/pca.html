@@ -27,23 +27,27 @@
 
 import numpy as np
 
-def pca(data, epsilon=1e-5):
+def pca(data, norm=False, epsilon=1e-5):
     &#34;&#34;&#34;Principal component analysis.
 
     Performs PCA using the NIPALS algorithm.
 
     Args:
-        data (numpy.array): A matrix of data to perform PCA on.
+        data (numpy.array): A matrix of data on which to perform PCA.
+        norm (bool): Whether or not the input data has been standardised.
         epsilon (float, optional): Required accuracy for convergence.
 
     Returns:
         A tuple `(T, P)`, where T and P are matrices. The columns of T are the
         principal components, and P is the matrix of weights.
     &#34;&#34;&#34;
-    # Standardise data
-    mu = data.mean(axis=0)
-    sigma = data.std(axis=0)
-    X = (data - mu) / sigma
+    if not norm:
+        # Standardise data
+        mu = data.mean(axis=0)
+        sigma = data.std(axis=0)
+        X = (data - mu) / sigma
+    else:
+        X = data.copy()
 
     # Create empty T and P matrices
     N, M = X.shape
@@ -80,7 +84,7 @@ def pca(data, epsilon=1e-5):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="quantfin.pca.pca"><code class="name flex">
-<span>def <span class="ident">pca</span></span>(<span>data, epsilon=1e-05)</span>
+<span>def <span class="ident">pca</span></span>(<span>data, norm=False, epsilon=1e-05)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Principal component analysis.</p>
@@ -88,7 +92,9 @@ def pca(data, epsilon=1e-5):
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>data</code></strong> :&ensp;<code>numpy.array</code></dt>
-<dd>A matrix of data to perform PCA on.</dd>
+<dd>A matrix of data on which to perform PCA.</dd>
+<dt><strong><code>norm</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether or not the input data has been standardised.</dd>
 <dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>Required accuracy for convergence.</dd>
 </dl>
@@ -97,23 +103,27 @@ def pca(data, epsilon=1e-5):
 principal components, and P is the matrix of weights.</p></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">def pca(data, epsilon=1e-5):
+<pre><code class="python">def pca(data, norm=False, epsilon=1e-5):
     &#34;&#34;&#34;Principal component analysis.
 
     Performs PCA using the NIPALS algorithm.
 
     Args:
-        data (numpy.array): A matrix of data to perform PCA on.
+        data (numpy.array): A matrix of data on which to perform PCA.
+        norm (bool): Whether or not the input data has been standardised.
         epsilon (float, optional): Required accuracy for convergence.
 
     Returns:
         A tuple `(T, P)`, where T and P are matrices. The columns of T are the
         principal components, and P is the matrix of weights.
     &#34;&#34;&#34;
-    # Standardise data
-    mu = data.mean(axis=0)
-    sigma = data.std(axis=0)
-    X = (data - mu) / sigma
+    if not norm:
+        # Standardise data
+        mu = data.mean(axis=0)
+        sigma = data.std(axis=0)
+        X = (data - mu) / sigma
+    else:
+        X = data.copy()
 
     # Create empty T and P matrices
     N, M = X.shape
